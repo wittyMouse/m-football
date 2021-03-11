@@ -3,7 +3,7 @@
     <div class="container best-news">
       <div class="scroll-view" ref="scroll">
         <div class="best-news-inner">
-          <div v-html="dataSource.content || ''"></div>
+          <div class="ck-content" v-html="dataSource.content || ''"></div>
         </div>
       </div>
     </div>

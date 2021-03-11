@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 import "./plugins/vant";
 import "./assets/style.scss";
+import './assets/ck-editor.scss'
 
 if (process.env.NODE_ENV !== "production") {
   const VConsole = require("vconsole");

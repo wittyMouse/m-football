@@ -105,12 +105,12 @@
                     </template>
                   </template>
                   <template v-else>
-                    <div v-html="dataSource.articleURL || ''"></div>
+                    <div class="ck-content" v-html="dataSource.articleURL || ''"></div>
                   </template>
                 </template>
               </template>
               <template v-else>
-                <div v-html="dataSource.articleURL || ''"></div>
+                <div class="ck-content" v-html="dataSource.articleURL || ''"></div>
               </template>
             </div>
           </div>
