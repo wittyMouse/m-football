@@ -24,7 +24,7 @@
             </div>
 
             <div class="article-card-content">
-              <template v-if="dataSource.amount > 0">
+              <!-- <template v-if="dataSource.amount > 0"> -->
                 <template v-if="!isLogin">
                   <div class="article-card-article">
                     <div class="article-card-article-line-2">
@@ -108,10 +108,10 @@
                     <div class="ck-content" v-html="dataSource.articleURL || ''"></div>
                   </template>
                 </template>
-              </template>
+              <!-- </template>
               <template v-else>
                 <div class="ck-content" v-html="dataSource.articleURL || ''"></div>
-              </template>
+              </template> -->
             </div>
           </div>
         </div>
