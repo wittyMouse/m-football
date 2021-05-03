@@ -244,6 +244,8 @@ export default {
 }
 
 .recommend-card-score-wrapper {
+  display: flex;
+  align-items: center;
   line-height: 0;
 }
 

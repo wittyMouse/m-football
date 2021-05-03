@@ -155,6 +155,8 @@ export default {
   height: 18px;
 }
 .author-info-score-wrapper {
+  display: flex;
+  align-items: center;
   line-height: 0;
 }
 .author-info-score {
