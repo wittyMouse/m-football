@@ -29,7 +29,7 @@
         </div>
 
         <div class="wm-login-form-item captcha">
-          <div class="wm-login-form-input-icon"></div>
+          <!-- <div class="wm-login-form-input-icon"></div> -->
           <input
             class="wm-login-form-input"
             maxlength="4"
@@ -60,8 +60,15 @@
         </div>
 
         <div class="wm-login-form-item">
+          <button
+            class="wm-login-form-button wm-login-form-button-wechart"
+            type="button"
+            @click="onWXLogin"
+          >
+            微信登录
+          </button>
           <button class="wm-login-form-button" type="submit">
-            确定登录
+            账户登录
           </button>
         </div>
 
@@ -80,6 +87,7 @@ import { mapActions } from "vuex";
 import RadioGroup from "@/components/RadioGroup";
 import Radio from "@/components/Radio";
 import { requestCaptcha, requestLogin, requestUserInfo } from "@/api";
+import { appId } from "@/api/config";
 
 export default {
   name: "Login",
@@ -184,6 +192,25 @@ export default {
      */
     onRegisterClick() {
       this.$router.push("/user-center/register");
+    },
+
+    /**
+     * 微信登录
+     */
+    onWXLogin() {
+      const { origin, pathname } = window.location
+      const redirectUri = origin + pathname;
+      const callbackUrl = this.$route.fullPath;
+      const stateText = `url=${callbackUrl}&target=login`;
+      let state = "";
+      for (let i = 0; i < stateText.length; i++) {
+        state += stateText.charCodeAt(i).toString(16);
+      }
+      console.log('state-length: ', state.length)
+      const authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${encodeURIComponent(
+        redirectUri
+      )}&response_type=code&scope=snsapi_userinfo&state=${state}#wechat_redirect`;
+      window.location.href = authUrl;
     },
 
     /**
@@ -296,19 +323,18 @@ export default {
 
 .wm-login-form-input {
   padding: 0 12px 0 68px;
-  width: 400px;
+  width: 320px;
   height: 72px;
   font-size: 32px;
   color: #888;
   border: 2px solid #ddd;
   background-color: #fff;
   border-radius: 10px;
-  box-sizing: border-box;
 }
 
 .wm-login-form-item.captcha .wm-login-form-input {
   display: inline-block;
-  width: 220px;
+  width: 140px;
   vertical-align: middle;
 }
 
@@ -336,18 +362,18 @@ export default {
 
 .wm-login-form-button {
   position: relative;
-  display: block;
+  display: inline-block;
   margin: 0 auto;
   padding: 0;
   border: 0;
-  width: 240px;
+  width: 200px;
   height: 72px;
   border-radius: 20px;
   font-size: 32px;
   font-weight: normal;
   color: #fff;
   line-height: 72px;
-  background-color: #e00;
+  background-color: #c00;
   outline: none;
 }
 
@@ -370,12 +396,21 @@ export default {
   opacity: 0.15;
 }
 
+.wm-login-form-button-wechart {
+  background-color: #0a0;
+}
+
+.wm-login-form-button + .wm-login-form-button {
+  margin-left: 8px;
+}
+
 .wm-login-form-link {
   position: relative;
   width: 400px;
+  height: 70px;
   font-size: 32px;
   text-align: center;
-  line-height: 66px;
+  line-height: 70px;
   color: #e00;
 }
 
@@ -387,7 +422,7 @@ export default {
   right: -50%;
   bottom: -50%;
   left: -50%;
-  border: 1px solid #e00;
+  border: 2px solid #e00;
   border-radius: 12px;
   transform-origin: center;
   transform: scale(0.5);

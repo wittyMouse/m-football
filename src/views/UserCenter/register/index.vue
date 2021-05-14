@@ -4,9 +4,22 @@
       <div class="scroll-view" ref="scroll">
         <wm-header>会员注册</wm-header>
 
-        <div class="register-form">
+        <div class="register-steps">
+          <div class="base-steps">
+            <div
+              :class="['base-step', { active: step > index }]"
+              v-for="(item, index) in ['验证手机号', '注册成功']"
+              :key="index"
+            >
+              <div class="base-step__head">{{ index + 1 }}</div>
+              <div class="base-step__main">{{ item }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="register-form" v-if="step === 1">
           <form autocomplete="off" @submit.prevent="onSubmit">
-            <div class="register-form-item">
+            <!-- <div class="register-form-item">
               <div class="register-form-label">
                 <span class="register-form-required">*&nbsp;</span>
                 <span>用&nbsp;户&nbsp;名:</span>
@@ -55,12 +68,12 @@
                   @input="onFieldInput"
                 />
               </div>
-            </div>
+            </div> -->
 
             <div class="register-form-item mobile">
               <div class="register-form-label">
-                <span class="register-form-required">*&nbsp;</span>
-                <span>手机号码:</span>
+                <!-- <span class="register-form-required">*&nbsp;</span> -->
+                <span>手机号码</span>
               </div>
               <div class="register-form-value">
                 <input
@@ -68,6 +81,7 @@
                   type="number"
                   name="mobile"
                   :value="registerFormData.mobile"
+                  placeholder="请输入号码"
                   @input="onFieldInput"
                 />
                 <div
@@ -75,15 +89,15 @@
                   hover-class="mobile-button"
                   @click="onGetCaptcha"
                 >
-                  获取验证码
+                  获取手机验证码
                 </div>
               </div>
             </div>
 
             <div class="register-form-item captcha">
               <div class="register-form-label">
-                <span class="register-form-required">*&nbsp;</span>
-                <span>验&nbsp;证&nbsp;码:</span>
+                <!-- <span class="register-form-required">*&nbsp;</span> -->
+                <span>手机验证码</span>
               </div>
               <div class="register-form-value">
                 <input
@@ -92,6 +106,7 @@
                   maxlength="6"
                   name="verificationCode"
                   :value="registerFormData.verificationCode"
+                  placeholder="请输入验证码"
                   @input="onFieldInput"
                 />
               </div>
@@ -99,7 +114,7 @@
 
             <div class="register-form-item">
               <div class="register-form-label">
-                <span>渠&nbsp;&nbsp;道:</span>
+                <span>得知渠道</span>
               </div>
               <div class="register-form-value">
                 <input
@@ -107,17 +122,20 @@
                   name="channelId"
                   readonly
                   :value="channelMap[registerFormData.channelId]"
+                  placeholder="请选择"
                   @click="onSelectModalOpen"
                 />
               </div>
             </div>
 
-            <div class="register-form-item">
-              <button class="register-form-button" type="submit">
-                确定提交
-              </button>
-            </div>
+            <button class="register-form-button" type="submit">
+              确定提交
+            </button>
           </form>
+        </div>
+
+        <div class="register-success" v-else>
+          
         </div>
 
         <div class="divider"></div>
@@ -194,6 +212,15 @@ export default {
         channelMap[item.channelId] = item.channelName;
       });
       return channelMap;
+    },
+
+    step() {
+      const { success } = this.$route.query;
+      if (success) {
+        return 2;
+      } else {
+        return 1;
+      }
     },
   },
   methods: {
@@ -320,9 +347,9 @@ export default {
      */
     onSubmit() {
       const {
-        account,
-        pwd,
-        confirmPwd,
+        // account,
+        // pwd,
+        // confirmPwd,
         mobile,
         verificationCode,
       } = this.registerFormData;
@@ -331,16 +358,24 @@ export default {
         return;
       }
 
-      if (!account) {
-        this.$toast("请输入用户名");
-        return;
-      } else if (!pwd) {
-        this.$toast("请输入登录密码");
-        return;
-      } else if (!confirmPwd) {
-        this.$toast("请输入确认密码");
-        return;
-      } else if (!mobile) {
+      // if (!account) {
+      //   this.$toast("请输入用户名");
+      //   return;
+      // } else if (!pwd) {
+      //   this.$toast("请输入登录密码");
+      //   return;
+      // } else if (!confirmPwd) {
+      //   this.$toast("请输入确认密码");
+      //   return;
+      // } else if (!mobile) {
+      //   this.$toast("请输入手机号码");
+      //   return;
+      // } else if (!verificationCode) {
+      //   this.$toast("请输入手机验证码");
+      //   return;
+      // }
+
+      if (!mobile) {
         this.$toast("请输入手机号码");
         return;
       } else if (!verificationCode) {
@@ -355,7 +390,8 @@ export default {
       };
 
       this.register(params, () => {
-        this.$router.push("/tips?type=success&title=注册成功");
+        // this.$router.push("/tips?type=success&title=注册成功");
+        this.$router.push("/user-center/register?success=1");
       });
     },
   },
@@ -375,14 +411,52 @@ export default {
   color: #fff;
 }
 
-.register-form {
+.register-steps {
+  position: relative;
+  padding: 40px 0;
   background-color: #fff;
+}
+
+.register-steps::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  width: 240px;
+  height: 1px;
+  border-bottom: 1px dashed #ccc;
+  transform: translate(-50%, 0);
+}
+
+.register-form {
+  position: relative;
+  padding-top: 24px;
+  background-color: #fff;
+}
+
+.register-form::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  bottom: -50%;
+  left: -50%;
+  border-top: 1px solid #ccc;
+  transform-origin: center;
+  transform: scale(0.5);
+  pointer-events: none;
+  box-sizing: border-box;
 }
 
 .register-form-item {
   display: flex;
   align-items: center;
-  padding: 20px 30px;
+  margin: 0 12px 24px;
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 10px;
   box-sizing: border-box;
 }
 
@@ -407,7 +481,7 @@ export default {
 .register-form-input {
   position: relative;
   padding: 0 20px;
-  border: 1px solid #ddd;
+  border: 0;
   width: 520px;
   height: 80px;
   border-radius: 10px;
@@ -425,7 +499,7 @@ export default {
   bottom: -50%;
   left: -50%;
   border-radius: 10px;
-  border: 1px solid #ddd;
+  border: 0;
   transform-origin: center;
   transform: scale(0.5);
   pointer-events: none;
@@ -439,17 +513,28 @@ export default {
 }
 
 .register-form-mobile {
+  // display: inline-block;
+  // margin-left: 10px;
+  // width: 210px;
+  // height: 70px;
+  // border-radius: 10px;
+  // vertical-align: middle;
+  // font-size: 28px;
+  // text-align: center;
+  // line-height: 70px;
+  // color: #fff;
+  // background-color: #e00;
+
   display: inline-block;
   margin-left: 10px;
-  width: 210px;
-  height: 70px;
-  border-radius: 10px;
-  vertical-align: middle;
-  font-size: 28px;
+  width: 36%;
+  height: 80px;
+  font-size: 24px;
   text-align: center;
-  line-height: 70px;
-  color: #fff;
-  background-color: #e00;
+  line-height: 80px;
+  color: #888;
+  background-color: #f0f0f0;
+  vertical-align: middle;
 }
 
 .mobile-button {
@@ -479,6 +564,7 @@ export default {
 }
 
 .register-form-button {
+  position: relative;
   display: block;
   margin: 0;
   padding: 0;
@@ -492,6 +578,25 @@ export default {
   color: #fff;
   line-height: 92px;
   background-color: #ee0000;
+}
+
+.register-form-button::before {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  border: inherit;
+  border-radius: inherit;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  background-color: #000;
+  border-color: #000;
+}
+
+.register-form-button:active::before {
+  opacity: 0.15;
 }
 
 .channel-list {
@@ -539,5 +644,45 @@ export default {
 
 .channel-item.border::after {
   border-bottom: 1px solid #ddd;
+}
+
+.base-steps {
+  display: flex;
+  align-items: center;
+}
+
+.base-step {
+  flex: 1;
+  height: 94px;
+
+  .base-step__head {
+    margin: 0 auto 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 24px;
+    text-align: center;
+    line-height: 40px;
+    color: #999;
+    border: 1px solid #ccc;
+  }
+
+  .base-step__main {
+    font-size: 24px;
+    text-align: center;
+    color: #999;
+  }
+
+  &.active {
+    .base-step__head {
+      border-color: #090;
+      color: #fff;
+      background-color: #090;
+    }
+
+    .base-step__main {
+      color: #090;
+    }
+  }
 }
 </style>

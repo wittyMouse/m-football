@@ -19,6 +19,11 @@ axiosInstance.interceptors.response.use(
   function(response) {
     if (response.data.code === 5010) {
       if (!store.state.modalVisible) {
+        store.commit("SET_MODAL_CONFIG", {
+          title: '提示',
+          content: '登录状态已过期',
+          confirmText: '重新登录'
+        });
         store.commit("SET_MODAL_VISIBLE", true);
       }
       return Promise.reject(response.data.message);

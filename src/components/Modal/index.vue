@@ -3,15 +3,17 @@
     <div class="modal-mask"></div>
     <div class="modal">
       <div class="modal-header">
-        <div class="modal-title">提示</div>
+        <div class="modal-title">{{ config.title || '提示' }}</div>
       </div>
       <div class="modal-content">
         <div class="">
-          登录状态已过期
+          {{ config.content || '' }}
         </div>
       </div>
       <div class="modal-footer">
-        <div class="modal-button" @click="onConfirm">重新登录</div>
+        <div class="modal-button" @click="onConfirm">
+          {{ config.confirmText || '确定' }}
+        </div>
       </div>
     </div>
   </div>
@@ -24,6 +26,10 @@ export default {
     visible: {
       type: Boolean,
       default: false,
+    },
+    config: {
+      type: Object,
+      default: () => {},
     },
   },
   methods: {

@@ -24,7 +24,7 @@
       <wm-tabbar @link="onNavClick" @menu="onShowMenuClick" />
     </div>
 
-    <Modal :visible="modalVisible" @confirm="onModalConfirm" />
+    <Modal :visible="modalVisible" :config="modalConfig" @confirm="onModalConfirm" />
   </div>
 </template>
 
@@ -63,7 +63,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["modalVisible"]),
+    ...mapState(["modalVisible", 'modalConfig']),
   },
   watch: {
     modalVisible(val) {

@@ -2,8 +2,10 @@ import Vue from "vue";
 import store from "../store";
 import VueRouter from "vue-router";
 import Home from "../views/Home";
-import { isWXEnv, parseQueryString } from "@/utils";
-import { appId } from '@/api/config'
+import { isWXEnv } from "@/utils";
+import { appId } from "@/api/config";
+import { requestLoginByQRCode, requestUserInfo } from "@/api";
+import querystring from "querystring";
 
 Vue.use(VueRouter);
 
@@ -103,52 +105,108 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  // console.log(to);
+  // console.log("to", to);
   if (!store.state.token) {
     const token = window.localStorage.getItem("token");
     if (token) {
-      const userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
       store.commit("SET_TOKEN", token);
+    }
+    let userInfo = window.localStorage.getItem("userInfo");
+    if (userInfo) {
+      userInfo = JSON.parse(userInfo);
       store.commit("SET_USER_INFO", userInfo);
     }
   }
 
-  if (process.env.NODE_ENV !== "production") {
-    next();
-  } else {
-    if (!isWXEnv() && to.path !== "/error") {
-      next("/error");
-    } else if (isWXEnv()) {
-      if (to.path === "/error") {
-        next("/home");
-      } else if (to.path === '/user-center/recharge') {
-        const openId = window.sessionStorage.getItem('openId')
-        const code = window.sessionStorage.getItem('code')
-        if (!openId && !code) {
-          const redirectUri = location.href.split("#")[0];
-          const authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=snsapi_base#wechat_redirect`;
-          window.location.href = authUrl;
+  // if (process.env.NODE_ENV !== "production") {
+  //   next();
+  // } else {
+  if (!isWXEnv() && to.path !== "/error") {
+    next("/error");
+  } else if (isWXEnv()) {
+    if (to.path === "/error") {
+      next("/home");
+    } else if (to.path === "/user-center/recharge") {
+      const openId = window.sessionStorage.getItem("openId");
+      const code = window.sessionStorage.getItem("code");
+      if (!openId && !code) {
+        const { origin, pathname } = window.location;
+        const redirectUri = origin + pathname;
+        const callbackUrl = to.fullPath;
+        const stateText = `url=${callbackUrl}&target=recharge`;
+        let state = "";
+        for (let i = 0; i < stateText.length; i++) {
+          state += stateText.charCodeAt(i).toString(16);
+        }
+        console.log("state-length: ", state.length);
+        const authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${encodeURIComponent(
+          redirectUri
+        )}&response_type=code&scope=snsapi_base&state=${state}#wechat_redirect`;
+        window.location.href = authUrl;
+      } else {
+        next();
+      }
+    } else {
+      const { origin, pathname, search } = window.location;
+      if (search) {
+        const { code, state } = querystring.parse(search.replace("?", ""));
+        if (code) {
+          const { url, target } = querystring.parse(
+            state
+              .match(/[\d\w]{2}/g)
+              .map((item) => String.fromCharCode(parseInt(item, 16)))
+              .join("")
+          );
+          window.sessionStorage.setItem("code", code);
+          window.sessionStorage.setItem("target", target);
+          window.location.href = `${origin}${pathname}#${url}`;
         } else {
           next();
         }
       } else {
-        const { origin, pathname, search } = window.location;
-        if (search) {
-          const { code } = parseQueryString(search);
-          if (code) {
-            window.sessionStorage.setItem('code', code)
-            window.location.href = origin + pathname + '#/user-center/recharge'
+        const code = window.sessionStorage.getItem("code");
+        const target = window.sessionStorage.getItem("target");
+        if (code && target) {
+          if (target === "login") {
+            const data = { code, type: 1 };
+            requestLoginByQRCode(data)
+              .then((res) => {
+                if (res.code === 0) {
+                  const token = res.result;
+                  store.dispatch("updateToken", token);
+                  requestUserInfo({ token }).then((res) => {
+                    if (res.code === 0) {
+                      const userInfo = res.result;
+                      store.dispatch("updateUserInfo", userInfo);
+                    } else {
+                      store.dispatch("logout");
+                    }
+                  });
+                } else {
+                  const modalConfig = {
+                    title: "提示",
+                    content: res.message,
+                    confirmText: "确定",
+                  };
+                  store.dispatch("updateModalConfig", modalConfig);
+                  store.dispatch("updateModalVisible", true);
+                }
+              })
+              .finally(() => {
+                window.sessionStorage.removeItem("code");
+                window.sessionStorage.removeItem("target");
+              });
           } else {
             next();
           }
-        } else {
-          next();
         }
+        next();
       }
-    } else {
-      next();
     }
+  } else {
+    next();
   }
+  // }
 });
 
 export default router;

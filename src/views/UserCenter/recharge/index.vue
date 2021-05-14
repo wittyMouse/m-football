@@ -27,7 +27,7 @@ import {
   requestPriceList,
   requestCreateOrder,
   requestJSSDKConfig,
-  requestOpenId
+  requestOpenId,
 } from "@/api";
 import columns from "./columns";
 
@@ -195,19 +195,26 @@ export default {
     },
   },
   beforeCreate() {
-    const code = window.sessionStorage.getItem('code')
-    if (code) {
-      requestOpenId({ code, env: "official-accounts" }).then((res) => {
-        if (res.code === 0) {
-          window.sessionStorage.setItem("openId", res.result);
-        }
-      }).finally(() => {
-          window.sessionStorage.removeItem('code')
-      });
+    const code = window.sessionStorage.getItem("code");
+    const target = window.sessionStorage.getItem("target");
+    if (code && target) {
+      if (target === "recharge") {
+        requestOpenId({ code, env: "official-accounts" })
+          .then((res) => {
+            if (res.code === 0) {
+              window.sessionStorage.setItem("openId", res.result);
+            }
+          })
+          .finally(() => {
+            window.sessionStorage.removeItem("code");
+            window.sessionStorage.removeItem("target");
+          });
+      }
     }
   },
   created() {
-    const url = location.href.split("#")[0];
+    const { origin, pathname } = window.location;
+    const url = origin + pathname;
     // const url = encodeURIComponent(location.href.split("#")[0]);
     this.getJSSDKConfig({ url }, (res) => {
       this.wxConfig(res);

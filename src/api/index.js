@@ -433,3 +433,27 @@ export function requestChannelList() {
     method: "post",
   });
 }
+
+/**
+ * 根据二维码进行登录
+ * @param token
+ */
+export function requestLoginByQRCode(data) {
+  return request.request({
+    url: "/api/member/loginByQRCode",
+    method: "post",
+    data
+  });
+}
+
+/**
+ * 微信注册
+ * @param token
+ */
+ export function requestRegisterByWechat(data) {
+  return request.request({
+    url: "/api/member/registerByWechat",
+    method: "post",
+    data
+  });
+}
