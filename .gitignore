@@ -2,6 +2,7 @@
 node_modules
 /dist
 /m-football
+/test-m-football
 
 
 # local env files
