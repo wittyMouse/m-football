@@ -11,7 +11,7 @@
                 <span>用&nbsp;户&nbsp;名:</span>
               </div>
               <div class="modify-form-value">
-                <span class="strong-text">{{ userInfo.account }}</span>
+                <span class="strong-text">{{ userInfo.nickname }}</span>
               </div>
             </div>
 
@@ -217,7 +217,7 @@ export default {
 
       const params = {
         ...this.modifyFormData,
-        nickname: this.modifyFormData.account,
+        nickname: this.userInfo.nickname,
         channelId: "",
         token: this.token,
       };

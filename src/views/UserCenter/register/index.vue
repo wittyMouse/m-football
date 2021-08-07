@@ -134,8 +134,26 @@
           </form>
         </div>
 
-        <div class="register-success" v-else>
-          
+        <div class="reg-list" v-else>
+          <div class="weui_msg">
+            <div class="weui_icon_area">
+              <img
+                class="weui_icon_success"
+                :src="assetsURL + '/success.png'"
+              />
+            </div>
+            <div class="weui_text_area">
+              <h2 class="weui_msg_title">注册成功</h2>
+              <p class="weui_msg_desc">已自动登录</p>
+            </div>
+            <div class="weui_opr_area">
+              <p class="weui_btn_area">
+                <button class="weui_btn weui_btn_primary" @click="onBackClick">
+                  确定返回首页
+                </button>
+              </p>
+            </div>
+          </div>
         </div>
 
         <div class="divider"></div>
@@ -168,11 +186,17 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import BasicLayout from "@/layouts/BasicLayout";
 import Header from "@/components/Header";
 import TipsModal from "./components/TipsModal";
 import SelectModal from "./components/SelectModal";
-import { requestChannelList, requestPhoneCode, requestRegister } from "@/api";
+import {
+  requestChannelList,
+  requestPhoneCode,
+  requestEditMemberInfo,
+} from "@/api";
+import { assetsURL } from "@/api/config";
 
 export default {
   name: "UserCenterRegister",
@@ -187,9 +211,9 @@ export default {
       submitting: false,
 
       registerFormData: {
-        account: "",
-        pwd: "",
-        confirmPwd: "",
+        // account: "",
+        // pwd: "",
+        // confirmPwd: "",
         mobile: "",
         verificationCode: "",
         channelId: "",
@@ -203,6 +227,7 @@ export default {
       channelList: [],
 
       selectModalVisible: false,
+      assetsURL,
     };
   },
   computed: {
@@ -224,6 +249,8 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["updateToken", "updateUserInfo"]),
+
     /**
      * 获取渠道列表
      */
@@ -268,7 +295,7 @@ export default {
      */
     register(params, cb) {
       this.submitting = true;
-      requestRegister(params)
+      requestEditMemberInfo(params)
         .then((res) => {
           if (res.code === 0) {
             this.$toast("注册成功");
@@ -352,6 +379,7 @@ export default {
         // confirmPwd,
         mobile,
         verificationCode,
+        channelId,
       } = this.registerFormData;
 
       if (this.submitting) {
@@ -381,18 +409,44 @@ export default {
       } else if (!verificationCode) {
         this.$toast("请输入手机验证码");
         return;
+      } else if (!channelId) {
+        this.$toast("请选择得知渠道");
+        return;
       }
+
+      const token = window.sessionStorage.getItem("register-token");
 
       const params = {
         ...this.registerFormData,
-        nickname: this.registerFormData.account,
-        verificationKey: this.registerFormData.mobile,
+        token,
+        // nickname: this.registerFormData.account,
+        // verificationKey: this.registerFormData.mobile,
+        // code: window.sessionStorage.getItem('code'),
+        // type: 1
       };
 
       this.register(params, () => {
         // this.$router.push("/tips?type=success&title=注册成功");
+        // window.sessionStorage.removeItem("code");
+        // window.sessionStorage.removeItem("target");
+        const userInfo = JSON.parse(
+          window.sessionStorage.getItem("register-userInfo")
+        );
+
+        this.updateToken(token);
+        this.updateUserInfo(userInfo);
+
+        window.sessionStorage.removeItem("register-token");
+        window.sessionStorage.removeItem("register-userInfo");
         this.$router.push("/user-center/register?success=1");
       });
+    },
+
+    /**
+     * 回到首页
+     */
+    onBackClick() {
+      this.$router.push("/home");
     },
   },
   mounted() {
@@ -684,5 +738,87 @@ export default {
       color: #090;
     }
   }
+}
+
+.reg-list {
+  padding-bottom: 40px;
+  font-size: 35px;
+  background-color: #ffffff;
+}
+
+.weui_msg {
+  padding-top: 72px;
+  text-align: center;
+}
+
+.weui_msg .weui_icon_area {
+  margin-bottom: 60px;
+}
+
+.weui_msg .weui_icon_area .weui_icon_success {
+  display: block;
+  margin: 0 auto;
+  width: 208px;
+  height: 208px;
+}
+
+.weui_msg .weui_text_area {
+  margin-bottom: 100px;
+  padding: 0 40px;
+}
+
+.weui_msg .weui_msg_title {
+  margin-bottom: 10px;
+  font-size: 40px;
+  font-weight: 400;
+}
+
+.weui_msg .weui_msg_desc {
+  font-size: 28px;
+  color: #888;
+}
+
+.weui_msg .weui_opr_area {
+  margin-bottom: 50px;
+}
+
+.weui_msg .weui_btn_area {
+  margin: 42px 30px 12px;
+}
+
+.weui_msg .weui_btn_area .weui_btn {
+  position: relative;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  width: 100% !important;
+  height: 92px;
+  border-radius: 10px;
+  font-size: 36px;
+  font-weight: normal;
+  text-decoration: none;
+  color: #fff;
+  line-height: 92px;
+  background-color: #ee0000;
+}
+
+.weui_msg .weui_btn_area .weui_btn::before {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  border: inherit;
+  border-radius: inherit;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  background-color: #000;
+  border-color: #000;
+}
+
+.weui_msg .weui_btn_area .weui_btn:active::before {
+  opacity: 0.15;
 }
 </style>

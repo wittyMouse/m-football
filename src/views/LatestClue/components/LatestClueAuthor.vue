@@ -5,7 +5,7 @@
         :class="['latest-clue-nav-item', { active: picker }]"
         @click="onPickerClick()"
       >
-        王牌贴士
+        <span class="latest-clue-nav-item__text">王牌贴士</span>
       </div>
     </div>
 
@@ -60,9 +60,11 @@ export default {
   position: relative;
   display: flex;
   align-items: center;
+  padding: 12px 0;
   width: 100%;
-  height: 80px;
-  background-color: #fff;
+  // height: 80px;
+  background-color: #eee;
+  box-sizing: border-box;
 }
 
 .latest-clue-nav-bar::after {
@@ -82,41 +84,72 @@ export default {
 
 .latest-clue-nav-item {
   position: relative;
-  margin: 0 8px;
-  width: calc(100% / 3 - 16px);
-  height: 68px;
-  border-radius: 12px;
-  font-size: 28px;
+  margin: 0 12px;
+  padding: 0.5Px;
+  width: 100%;
+  height: 94px;
+  border-radius: 20px;
+  font-size: 32px;
   font-weight: bold;
-  text-align: center;
-  line-height: 68px;
+  text-indent: 24px;
+  line-height: 94px;
   color: #fff;
   background-color: #e00;
+  background-image: linear-gradient(#e00, #900);
 }
 
-.latest-clue-nav-item::after {
-  content: " ";
-  display: block;
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  bottom: -50%;
-  left: -50%;
-  border-radius: 24px;
-  border: 1px solid #e00;
-  transform-origin: center;
-  transform: scale(0.5);
-  pointer-events: none;
-  box-sizing: border-box;
-}
+// .latest-clue-nav-item::after {
+//   content: " ";
+//   display: block;
+//   position: absolute;
+//   top: -50%;
+//   right: -50%;
+//   bottom: -50%;
+//   left: -50%;
+//   border-radius: 24px;
+//   border: 1px solid #e00;
+//   transform-origin: center;
+//   transform: scale(0.5);
+//   pointer-events: none;
+//   box-sizing: border-box;
+// }
 
 .latest-clue-nav-item.active {
   color: #fff;
   background-color: #900;
+  background-image: linear-gradient(#900, #e00);
 }
 
-.latest-clue-nav-item.active::after {
-  border: 1px solid #900;
+// .latest-clue-nav-item.active::after {
+//   border: 1px solid #900;
+// }
+
+.latest-clue-nav-item__text {
+  position: relative;
+  display: block;
+  background-image: linear-gradient(#900, #e00);
+  margin: 10px;
+  border-radius: 10px;
+  line-height: 72px;
+}
+
+.latest-clue-nav-item__text::before {
+  content: "▼";
+  position: absolute;
+  top: 50%;
+  right: 24px;
+  color: #fff;
+  font-size: 24px;
+  transform: translateY(-50%);
+}
+
+.latest-clue-nav-item.active .latest-clue-nav-item__text {
+  background-image: linear-gradient(#600, #900);
+  color: #FFFF99;
+}
+
+.latest-clue-nav-item.active .latest-clue-nav-item__text::before {
+  color: #FFFF99;
 }
 
 .latest-clue-author-list {

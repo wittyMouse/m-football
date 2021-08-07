@@ -1,18 +1,83 @@
 <template>
   <div class="wm-login">
-    <div class="wm-login-layout">
+    <div class="wm-login-layout-left">
       <div>【 客服热线 】</div>
       <div class="wm-login-number">400-000-1357</div>
     </div>
 
-    <div class="wm-login-form-item">
-      <button
-        class="wm-login-form-button wm-login-form-button-wechart"
-        type="button"
-        @click="onWXLogin"
-      >
-        微信登录
-      </button>
+    <div class="wm-login-layout-right">
+      <form autocomplete="off" @submit.prevent="onSubmit">
+        <div class="wm-login-form-item account">
+          <div class="wm-login-form-input-icon"></div>
+          <input
+            class="wm-login-form-input"
+            name="account"
+            :value="loginFormData.account"
+            @input="onFieldInput"
+          />
+        </div>
+
+        <div class="wm-login-form-item password">
+          <div class="wm-login-form-input-icon"></div>
+          <input
+            class="wm-login-form-input"
+            type="password"
+            name="pwd"
+            :value="loginFormData.pwd"
+            @input="onFieldInput"
+          />
+        </div>
+
+        <div class="wm-login-form-item captcha">
+          <!-- <div class="wm-login-form-input-icon"></div> -->
+          <input
+            class="wm-login-form-input"
+            maxlength="4"
+            name="verificationCode"
+            :value="loginFormData.verificationCode"
+            @input="onFieldInput"
+          />
+          <img
+            class="wm-login-form-captcha"
+            :src="captchaImage"
+            @click="onUpdateCaptcha"
+          />
+        </div>
+
+        <div class="wm-login-form-item">
+          <div class="wm-login-form-radio-group-wrapper">
+            <div class="wm-login-form-radio-text">有效期：</div>
+            <wm-radio-group
+              name="type"
+              :value="loginFormData.type"
+              @change="onFieldChange"
+            >
+              <wm-radio label="一个月" value="2" />
+              <wm-radio label="一周" value="1" />
+              <wm-radio label="一天" value="0" />
+            </wm-radio-group>
+          </div>
+        </div>
+
+        <div class="wm-login-form-item">
+          <button
+            class="wm-login-form-button wm-login-form-button-wechart"
+            type="button"
+            @click="onWXLogin"
+          >
+            微信登录
+          </button>
+          <button class="wm-login-form-button" type="submit">
+            账户登录
+          </button>
+        </div>
+
+        <div class="wm-login-form-item">
+          <div class="wm-login-form-link" @click="onRegisterClick">
+            立即注册，享受巅峰！
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -133,7 +198,7 @@ export default {
      * 微信登录
      */
     onWXLogin() {
-      const { origin, pathname } = window.location;
+      const { origin, pathname } = window.location
       const redirectUri = origin + pathname;
       const callbackUrl = this.$route.fullPath;
       const stateText = `url=${callbackUrl}&target=login`;
@@ -141,7 +206,7 @@ export default {
       for (let i = 0; i < stateText.length; i++) {
         state += stateText.charCodeAt(i).toString(16);
       }
-      console.log("state-length: ", state.length);
+      console.log('state-length: ', state.length)
       const authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${encodeURIComponent(
         redirectUri
       )}&response_type=code&scope=snsapi_userinfo&state=${state}#wechat_redirect`;
@@ -197,23 +262,12 @@ export default {
 
 <style lang="scss" scoped>
 .wm-login {
-  // display: flex;
-  background-image: url("https://www.df1668.com/images/bg-login2.jpeg");
+  display: flex;
+  background-image: url("https://www.df1668.com/images/bg-login.jpg");
   background-repeat: no-repeat;
   background-position: top center;
   background-size: 100% auto;
   background-color: #fff;
-}
-
-.wm-login-layout {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-shadow: 0 0 8px #fff, 0 0 8px #fff;
-  text-align: center;
-  font-size: 28px;
-  line-height: 40px;
-  padding-top: 300px;
 }
 
 .wm-login-layout-left {
@@ -240,9 +294,7 @@ export default {
 
 .wm-login-form-item {
   position: relative;
-  // padding: 6px 0;
-  padding: 40px 0 80px;
-  text-align: center;
+  padding: 6px 0;
 }
 
 .wm-login-form-input-icon {
@@ -314,13 +366,13 @@ export default {
   margin: 0 auto;
   padding: 0;
   border: 0;
-  width: 240px;
-  height: 80px;
+  width: 200px;
+  height: 72px;
   border-radius: 20px;
-  font-size: 36px;
+  font-size: 32px;
   font-weight: normal;
   color: #fff;
-  line-height: 80px;
+  line-height: 72px;
   background-color: #c00;
   outline: none;
 }

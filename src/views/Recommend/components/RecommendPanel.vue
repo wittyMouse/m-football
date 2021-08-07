@@ -15,6 +15,7 @@
         @click="onClick(item.id)"
       >
         <div class="recommend-card-layout-left">
+          <div class="sale-time" v-show="item.sale"></div>
           <div class="recommend-card-chart">
             <wm-pie-chart :value="item.winning" />
             <div class="recommend-card-avatar">
@@ -142,6 +143,30 @@ export default {
   padding-top: 20px;
   width: 216px;
   box-sizing: border-box;
+}
+
+.sale-time {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  width: 96px;
+  height: 96px;
+  background: url("https://www.df1668.com/images/icon-sale.png");
+  background-size: 100%;
+  animation: iconst 0.5s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes iconst {
+  from {
+    background: url("https://www.df1668.com/images/icon-sale.png");
+    background-size: 100%;
+  }
+  to {
+    background: url("https://www.df1668.com/images/icon-sale2.png");
+    background-size: 100%;
+  }
 }
 
 .recommend-card-layout-right {

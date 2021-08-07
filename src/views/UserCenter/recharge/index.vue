@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import BasicLayout from "@/layouts/BasicLayout";
 import Header from "@/components/Header";
 import Table from "./components/Table";
@@ -28,6 +28,7 @@ import {
   requestCreateOrder,
   requestJSSDKConfig,
   requestOpenId,
+  requestUserInfo
 } from "@/api";
 import columns from "./columns";
 
@@ -54,6 +55,8 @@ export default {
     ...mapState(["token"]),
   },
   methods: {
+    ...mapActions(['updateUserInfo']),
+    
     /**
      * 获取充值赠送配置列表
      * @param {*} params
@@ -189,6 +192,11 @@ export default {
       this.createOrder(params, (res) => {
         this.wxChooseWXPay(res, () => {
           this.$toast("充值成功");
+          requestUserInfo({ token: this.token }).then(res => {
+            if (res.code === 0) {
+              this.updateUserInfo(res.result);
+            }
+          })
           this.$router.push("/tips?type=success&title=充值成功");
         });
       });

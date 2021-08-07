@@ -457,3 +457,15 @@ export function requestLoginByQRCode(data) {
     data
   });
 }
+
+/**
+ * 修改会员信息
+ * @param token
+ */
+ export function requestEditMemberInfo(data) {
+  return request.request({
+    url: "/api/member/editMemberInfo",
+    method: "post",
+    data
+  });
+}

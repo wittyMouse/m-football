@@ -7,14 +7,15 @@
     <wm-Login ref="login" @login="$emit('login')" v-show="!isLogin" />
 
     <div class="wm-menu" v-show="isLogin">
-      <div class="wm-menu-welcome">
+      <!-- <div class="wm-menu-welcome">
         <div class="wm-menu-welcome-item">
           <div class="wm-menu-welcome-text">
             你好！<span class="wm-menu-high-light-text">{{
-              userInfo.account
+              userInfo.nickname
             }}</span>
           </div>
         </div>
+
         <div class="wm-menu-welcome-item">
           <div class="wm-menu-welcome-text">
             当前金币数量：<span class="wm-menu-high-light-text">{{
@@ -25,10 +26,39 @@
             }}</span>
           </div>
         </div>
+
+        <div class="wm-menu-welcome-item">
+          <button class="wm-menu-button" @click="onLogOut">退出</button>
+        </div>
+      </div> -->
+
+      <div class="wm-menu-welcome">
+        <div class="wm-menu-welcome-item">
+          <img class="wm-menu-welcome-image" :src="userInfo.avatar" />
+        </div>
+
+        <div class="wm-menu-welcome-item">
+          <div class="wm-menu-welcome-text">
+            你好！<span class="wm-menu-high-light-text">{{
+              userInfo.nickname
+            }}</span>
+          </div>
+
+          <div class="wm-menu-welcome-text">
+            当前金币数量：<span class="wm-menu-high-light-text">{{
+              userInfo.balance
+            }}</span>
+            ，积分：<span class="wm-menu-high-light-text">{{
+              userInfo.integral
+            }}</span>
+          </div>
+        </div>
+
         <div class="wm-menu-welcome-item">
           <button class="wm-menu-button" @click="onLogOut">退出</button>
         </div>
       </div>
+
       <div class="wm-menu-list">
         <div class="wm-menu-item" @click="onMenuClick('record', 'recharge')">
           <span>充值与消费记录</span>
@@ -50,6 +80,7 @@
           <span style="color: #e00;">会员快速充值</span>
         </div>
       </div>
+      
       <div class="wm-menu-contact">
         <img class="wm-menu-contact-icon" :src="assetsURL + '/icon-tel.png'" />
         <span class="wm-menu-contact-text">客服热线：</span>
@@ -163,12 +194,26 @@ export default {
 }
 
 .wm-menu-welcome {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  // text-align: center;
 }
 
 .wm-menu-welcome-item {
-  display: inline-block;
-  vertical-align: middle;
+  // display: inline-block;
+  // vertical-align: middle;
+}
+
+.wm-menu-welcome-item:nth-of-type(2) {
+  flex: 1;
+}
+
+.wm-menu-welcome-image {
+  // margin-right: 20px;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
 }
 
 .wm-menu-welcome-item:not(:last-child) {
@@ -177,8 +222,8 @@ export default {
 
 .wm-menu-welcome-text {
   font-size: 26px;
-  text-align: center;
-  line-height: 92px;
+  // text-align: center;
+  // line-height: 92px;
 }
 
 .wm-menu-high-light-text {
