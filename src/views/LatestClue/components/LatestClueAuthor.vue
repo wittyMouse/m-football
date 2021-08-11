@@ -5,7 +5,7 @@
         :class="['latest-clue-nav-item', { active: picker }]"
         @click="onPickerClick()"
       >
-        <span class="latest-clue-nav-item__text">王牌贴士</span>
+        <span class="latest-clue-nav-item__text">更多专家</span>
       </div>
     </div>
 
@@ -17,6 +17,7 @@
         @click="onClick(item.id)"
       >
         <div class="latest-clue-author-avatar">
+          <div class="latest-clue-author-avatar__badge">{{ item.num }}</div>
           <img class="latest-clue-author-avatar-image" :src="item.avatar" />
         </div>
         <div class="latest-clue-author-name">{{ item.realname }}</div>
@@ -85,7 +86,7 @@ export default {
 .latest-clue-nav-item {
   position: relative;
   margin: 0 12px;
-  padding: 0.5Px;
+  padding: 0.5px;
   width: 100%;
   height: 94px;
   border-radius: 20px;
@@ -145,11 +146,11 @@ export default {
 
 .latest-clue-nav-item.active .latest-clue-nav-item__text {
   background-image: linear-gradient(#600, #900);
-  color: #FFFF99;
+  color: #ffff99;
 }
 
 .latest-clue-nav-item.active .latest-clue-nav-item__text::before {
-  color: #FFFF99;
+  color: #ffff99;
 }
 
 .latest-clue-author-list {
@@ -183,9 +184,24 @@ export default {
 }
 
 .latest-clue-author-avatar {
+  position: relative;
   margin: 0 auto;
   width: 120px;
   height: 120px;
+
+  &__badge {
+    position: absolute;
+    top: -8px;
+    right: -12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 22px;
+    text-align: center;
+    color: #fff;
+    line-height: 40px;
+    background-color: #c7000b;
+  }
 }
 
 .latest-clue-author-avatar-image {

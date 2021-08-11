@@ -26,7 +26,7 @@
         <div class="latest-clue-list">
           <LatestClueCard
             :latestClueDetail="item"
-            v-for="(item, index) in dataSource"
+            v-for="(item, index) in filterDataSource"
             :key="index"
             @click="onCardClick"
           />
@@ -68,6 +68,9 @@ export default {
   },
   computed: {
     ...mapState(["token"]),
+    filterDataSource() {
+      return this.dataSource.filter((_, index) => index < 40)
+    }
   },
   methods: {
     // 根据部门 Id 获取用户信息
