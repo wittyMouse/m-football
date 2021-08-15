@@ -246,11 +246,11 @@ export default {
       this.checkInLoading = true;
       requestCheckIn(data)
         .then((res) => {
-          if (res.data.code === 0) {
+          if (res.code === 0) {
             this.$toast("签到成功");
             cb && cb();
           } else {
-            this.$toast(res.data.message);
+            this.$toast(res.message);
           }
         })
         .finally(() => {
