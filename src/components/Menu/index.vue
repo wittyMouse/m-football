@@ -34,23 +34,49 @@
 
       <div class="wm-menu-welcome">
         <div class="wm-menu-welcome-item">
-          <img class="wm-menu-welcome-image" :src="userInfo.avatar" />
+          <div class="wm-menu-welcome-image-wrapper">
+            <div class="wm-menu-welcome-image-frame">
+              <img
+                class="wm-menu-welcome-image"
+                :src="
+                  `${assetsURL}/bk-icon0${
+                    userInfo.vipLevel && userInfo.vipLevel > 0
+                      ? userInfo.vipLevel
+                      : 1
+                  }.png`
+                "
+              />
+            </div>
+            <img class="wm-menu-welcome-image" :src="userInfo.avatar" />
+          </div>
         </div>
 
         <div class="wm-menu-welcome-item">
           <div class="wm-menu-welcome-text">
-            你好！<span class="wm-menu-high-light-text">{{
-              userInfo.nickname
+            <span class="wm-menu-high-light-text">{{ userInfo.nickname }}</span>
+            金币：<span class="wm-menu-high-light-text color-red">{{
+              userInfo.balance
+            }}</span>
+            ，积分：<span class="wm-menu-high-light-text color-red">{{
+              userInfo.integral
             }}</span>
           </div>
 
-          <div class="wm-menu-welcome-text">
-            当前金币数量：<span class="wm-menu-high-light-text">{{
-              userInfo.balance
-            }}</span>
-            ，积分：<span class="wm-menu-high-light-text">{{
-              userInfo.integral
-            }}</span>
+          <div class="level-bar">
+            <div class="level-bar__level">Lv.{{ userInfo.vipLevel }}</div>
+            <div class="exp-bar">
+              <span class="exp-bar__text"
+                >{{ userInfo.exp }}/{{ userInfo.nextVipLeveExp }}</span
+              >
+              <div class="exp-bar__exp">
+                <div
+                  class="exp-bar__inner"
+                  :style="{
+                    width: (userInfo.exp / userInfo.nextVipLeveExp) * 100 + '%',
+                  }"
+                ></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -72,15 +98,15 @@
         <div class="wm-menu-item" @click="onMenuClick('record', 'journal')">
           <span>所有流水记录</span>
         </div>
-        <div class="wm-menu-item" @click="onMenuClick('modify')">
-          <span>会员资料修改</span>
+        <div class="wm-menu-item" @click="onMenuClick('index')">
+          <span style="color: #e00;">签到有奖</span>
         </div>
         <div class="wm-menu-item" @click="onMenuClick('recharge')">
           <img class="wm-menu-coin-icon" :src="assetsURL + '/icon-add01.png'" />
           <span style="color: #e00;">会员快速充值</span>
         </div>
       </div>
-      
+
       <div class="wm-menu-contact">
         <img class="wm-menu-contact-icon" :src="assetsURL + '/icon-tel.png'" />
         <span class="wm-menu-contact-text">客服热线：</span>
@@ -176,8 +202,8 @@ export default {
         case "recharge":
           this.$router.push("/user-center/recharge");
           break;
-        case "modify":
-          this.$router.push("/user-center/modify");
+        case "index":
+          this.$router.push("/user-center/index");
           break;
       }
     },
@@ -196,7 +222,7 @@ export default {
 .wm-menu-welcome {
   display: flex;
   align-items: center;
-  padding: 10px 20px;
+  padding: 20px 20px;
   // text-align: center;
 }
 
@@ -209,11 +235,24 @@ export default {
   flex: 1;
 }
 
+.wm-menu-welcome-image-wrapper {
+  position: relative;
+  width: 96px;
+  height: 96px;
+}
+
+.wm-menu-welcome-image-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 96px;
+  height: 96px;
+}
+
 .wm-menu-welcome-image {
   // margin-right: 20px;
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
+  width: 100%;
+  height: 100%;
 }
 
 .wm-menu-welcome-item:not(:last-child) {
@@ -228,7 +267,42 @@ export default {
 
 .wm-menu-high-light-text {
   font-weight: bold;
+}
+
+.color-red {
   color: #e00;
+}
+
+.level-bar {
+  display: flex;
+  padding-top: 8px;
+  font-size: 24px;
+  color: #888;
+
+  &__level {
+    margin-right: 12px;
+    padding: 0 12px;
+    border-radius: 12px;
+    color: #ffffff;
+    line-height: 32px;
+    background-color: #333;
+  }
+
+  .exp-bar {
+    &__text {
+    }
+
+    &__exp {
+      width: 200px;
+      height: 6px;
+      background-color: #ccc;
+    }
+
+    &__inner {
+      height: 6px;
+      background-color: #f50;
+    }
+  }
 }
 
 .wm-menu-button {

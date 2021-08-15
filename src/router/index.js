@@ -55,7 +55,7 @@ const routes = [
     component: () => import("../views/Playback"),
   },
   {
-    path: "/user-center",
+    path: "/user-center/index",
     name: "UserCenter",
     component: () => import("../views/UserCenter"),
   },
