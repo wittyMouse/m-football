@@ -1,18 +1,18 @@
 <template>
-  <div class="latest-clue-card" @click="onClick(LatestClueDetail.articleId)">
+  <div class="latest-clue-card" @click="onClick(latestClueDetail.articleId)">
     <div class="latest-clue-card-content">
-      <span>[{{ LatestClueDetail.realName }}]&nbsp;&nbsp;</span>
+      <span>[{{ latestClueDetail.realName }}]&nbsp;&nbsp;</span>
       <span class="latest-clue-card-title-text">
-        {{ LatestClueDetail.articleTitle }}
+        {{ latestClueDetail.articleTitle }}
       </span>
     </div>
     <div class="latest-clue-card-footer">
       <div class="latest-clue-card-footer-text" style="color: #e00;">
-        所需金币：{{ LatestClueDetail.amount }}
+        所需金币：{{ latestClueDetail.amount }}
       </div>
       <div class="latest-clue-card-footer-text">
-        <span>时间：{{ formatDate(LatestClueDetail.publicationTime) }}</span>
-        <span>点击：{{ LatestClueDetail.clickNum }}</span>
+        <span>时间：{{ formatDate(latestClueDetail.publicationTime) }}</span>
+        <span>点击：{{ latestClueDetail.clickNum }}</span>
       </div>
     </div>
   </div>
@@ -22,7 +22,7 @@
 export default {
   name: "LatestClueCard",
   props: {
-    LatestClueDetail: {
+    latestClueDetail: {
       type: Object,
       default() {
         return {};

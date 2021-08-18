@@ -10,7 +10,7 @@
 
         <div class="latest-clue-list">
           <LatestClueCard
-            :LatestClueDetail="item"
+            :latestClueDetail="item"
             v-for="(item, index) in dataSource"
             :key="index"
             @click="onCardClick"
@@ -40,11 +40,12 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+import throttle from "lodash/throttle";
 import BasicLayout from "@/layouts/BasicLayout";
 import Header from "@/components/Header";
 import LatestClueAuthor from "./components/LatestClueAuthor";
 import LatestClueCard from "./components/LatestClueCard";
-import throttle from "lodash/throttle";
 import { requestAuthorInfo, requestArticleListByAuthor } from "@/api";
 
 export default {
@@ -90,6 +91,9 @@ export default {
 
       scrollToLower: false,
     };
+  },
+  computed: {
+    ...mapState(["token"]),
   },
   methods: {
     /**
