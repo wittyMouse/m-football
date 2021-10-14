@@ -190,7 +190,7 @@ export default {
       };
 
       this.createOrder(params, (res) => {
-        this.wxChooseWXPay(res, () => {
+        this.wxChooseWXPay(res.payData, () => {
           this.$toast("充值成功");
           requestUserInfo({ token: this.token }).then(res => {
             if (res.code === 0) {
