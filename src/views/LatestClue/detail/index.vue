@@ -383,7 +383,9 @@ export default {
           spanEl.appendChild(
             document.createTextNode(articleMarketingList[i].proposal)
           );
-          parentEl.replaceChild(spanEl, btnEl);
+          if (parentEl) {
+            parentEl.replaceChild(spanEl, btnEl);
+          }
         } else {
           // 未购买
           const value = btnEl.getAttribute("data-id");
