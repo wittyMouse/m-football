@@ -320,6 +320,11 @@ export default {
      * 确认购买
      */
     onBuySubmit() {
+      if (this.subscribeLoading) {
+        this.$toast("处理中...");
+        return
+      }
+
       this.subscribe(
         { token: this.token, type: this.currentType, userId: this.id },
         () => {
