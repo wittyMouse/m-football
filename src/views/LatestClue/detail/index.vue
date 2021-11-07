@@ -353,7 +353,7 @@ export default {
      * @param e
      */
     onConfirmBuy(e) {
-      const key = e.target.getAttribute("id");
+      const key = e.target.getAttribute("data-id");
       this.authorInfo = this.articleMarketingMap[key];
       this.confirmBoxVisible = true;
     },
@@ -362,25 +362,38 @@ export default {
      * 添加所有文章按钮的事件监听
      */
     addButtonEventListener(articleMarketingList) {
-      const btnEls = window.document.querySelectorAll(
-        ".ck-content .recommend-button"
+      const ckEl = window.document.querySelector(".ck-content");
+      if (!ckEl) {
+        return;
+      }
+      const btnEls = ckEl.querySelectorAll(
+        ".recommend-button, .recommend-result"
       );
-      btnEls.forEach((btnEl, index) => {
-        if (articleMarketingList[index].buy) {
+      for (let i = 0; i < btnEls.length; i++) {
+        const btnEl = btnEls[i];
+        if (btnEl.tagName === "SPAN") {
+          continue;
+        }
+
+        if (articleMarketingList[i].buy) {
           // 已购买
           const parentEl = btnEl.parentNode;
           const spanEl = document.createElement("span");
           spanEl.classList.add("recommend-result");
           spanEl.appendChild(
-            document.createTextNode(articleMarketingList[index].proposal)
+            document.createTextNode(articleMarketingList[i].proposal)
           );
           parentEl.replaceChild(spanEl, btnEl);
         } else {
           // 未购买
-          btnEl.setAttribute("id", articleMarketingList[index].id);
+          const value = btnEl.getAttribute("data-id");
+          if (value) {
+            continue;
+          }
+          btnEl.setAttribute("data-id", articleMarketingList[i].id);
           btnEl.addEventListener("click", this.onConfirmBuy);
         }
-      });
+      }
     },
 
     /**
@@ -409,6 +422,12 @@ export default {
       requestBuyArticleMarketing({ token: this.token, articleMarketingId })
         .then((res) => {
           if (res.code === 0) {
+            const btnEl = window.document.querySelector(
+              `[data-id="${articleMarketingId}"]`
+            );
+            if (btnEl) {
+              btnEl.removeEventListener("click", this.onConfirmBuy);
+            }
             this.$toast(res.message);
             this.onConfirmBoxClose();
             this.getArticleDetail({ token: this.token, articleId: this.id });
