@@ -442,7 +442,7 @@ export function requestLoginByQRCode(data) {
   return request.request({
     url: "/api/member/loginByQRCode",
     method: "post",
-    data
+    data,
   });
 }
 
@@ -450,11 +450,11 @@ export function requestLoginByQRCode(data) {
  * 微信注册
  * @param token
  */
- export function requestRegisterByWechat(data) {
+export function requestRegisterByWechat(data) {
   return request.request({
     url: "/api/member/registerByWechat",
     method: "post",
-    data
+    data,
   });
 }
 
@@ -462,10 +462,22 @@ export function requestLoginByQRCode(data) {
  * 修改会员信息
  * @param token
  */
- export function requestEditMemberInfo(data) {
+export function requestEditMemberInfo(data) {
   return request.request({
     url: "/api/member/editMemberInfo",
     method: "post",
-    data
+    data,
+  });
+}
+
+/**
+ * 文章推介购买
+ * @param token
+ */
+export function requestBuyArticleMarketing(data) {
+  return request({
+    url: "/api/member/buyArticleMarketing",
+    method: "post",
+    data,
   });
 }

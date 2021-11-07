@@ -25,89 +25,92 @@
 
             <div class="article-card-content">
               <!-- <template v-if="dataSource.amount > 0"> -->
-                <template v-if="!isLogin">
-                  <div class="article-card-article">
-                    <div class="article-card-article-line-2">
-                      <div class="">
-                        这篇文档需要
-                        <span style="color: #e00;">
-                          {{ dataSource.amount }}
-                        </span>
-                        金币 才能访问
-                      </div>
-                      <div class="">
-                        请先 <span style="color: #e00;">登录</span>
-                      </div>
+              <template v-if="!isLogin">
+                <div class="article-card-article">
+                  <div class="article-card-article-line-2">
+                    <div class="">
+                      这篇文档需要
+                      <span style="color: #e00;">
+                        {{ dataSource.amount }}
+                      </span>
+                      金币 才能访问
                     </div>
-                    <button
-                      class="article-card-button"
-                      @click="onButtonClick('login')"
-                    >
-                      登录
-                    </button>
+                    <div class="">
+                      请先 <span style="color: #e00;">登录</span>
+                    </div>
                   </div>
-                </template>
-                <template v-else>
-                  <template v-if="!dataSource.isBuy">
-                    <template v-if="userInfo.balance >= dataSource.amount">
-                      <div class="article-card-article">
-                        <div class="article-card-article-line-1">
-                          <div>该内容为收费内容</div>
-                          <div>欢迎订阅！</div>
-                        </div>
-                        <div class="article-card-article-line-2">
-                          <div class="">
-                            这篇文档需要
-                            <span style="color: #e00;">{{
-                              dataSource.amount
-                            }}</span>
-                            金币 才能访问
-                          </div>
-                          <div class="">
-                            你目前拥有金币：<span style="color: #e00;">{{
-                              userInfo.balance
-                            }}</span>
-                            个
-                          </div>
-                        </div>
-                        <button
-                          class="article-card-button"
-                          @click="onButtonClick('buy')"
-                        >
-                          立即订购
-                        </button>
+                  <button
+                    class="article-card-button"
+                    @click="onButtonClick('login')"
+                  >
+                    登录
+                  </button>
+                </div>
+              </template>
+              <template v-else>
+                <template v-if="!dataSource.isBuy">
+                  <template v-if="userInfo.balance >= dataSource.amount">
+                    <div class="article-card-article">
+                      <div class="article-card-article-line-1">
+                        <div>该内容为收费内容</div>
+                        <div>欢迎订阅！</div>
                       </div>
-                    </template>
-                    <template v-else>
-                      <div class="article-card-article">
-                        <div class="article-card-article-line-2">
-                          <div class="">
-                            这篇文档需要
-                            <span style="color: #e00;">{{
-                              dataSource.amount
-                            }}</span>
-                            金币 才能访问
-                          </div>
-                          <div class="">
-                            你的金币现有 {{ userInfo.balance }}，<span
-                              style="color: #e00;"
-                              >不足购买，请先充值</span
-                            >
-                          </div>
+                      <div class="article-card-article-line-2">
+                        <div class="">
+                          这篇文档需要
+                          <span style="color: #e00;">{{
+                            dataSource.amount
+                          }}</span>
+                          金币 才能访问
                         </div>
-                        <button
-                          class="article-card-button"
-                          @click="onButtonClick('recharge')"
-                        >
-                          去充值
-                        </button>
+                        <div class="">
+                          你目前拥有金币：<span style="color: #e00;">{{
+                            userInfo.balance
+                          }}</span>
+                          个
+                        </div>
                       </div>
-                    </template>
+                      <button
+                        class="article-card-button"
+                        @click="onButtonClick('buy')"
+                      >
+                        立即订购
+                      </button>
+                    </div>
                   </template>
                   <template v-else>
-                    <div class="ck-content" v-html="dataSource.articleURL || ''"></div>
+                    <div class="article-card-article">
+                      <div class="article-card-article-line-2">
+                        <div class="">
+                          这篇文档需要
+                          <span style="color: #e00;">{{
+                            dataSource.amount
+                          }}</span>
+                          金币 才能访问
+                        </div>
+                        <div class="">
+                          你的金币现有 {{ userInfo.balance }}，<span
+                            style="color: #e00;"
+                            >不足购买，请先充值</span
+                          >
+                        </div>
+                      </div>
+                      <button
+                        class="article-card-button"
+                        @click="onButtonClick('recharge')"
+                      >
+                        去充值
+                      </button>
+                    </div>
                   </template>
                 </template>
+                <template v-else>
+                  <div
+                    class="ck-content"
+                    v-html="dataSource.articleURL || ''"
+                  ></div>
+                </template>
+              </template>
               <!-- </template>
               <template v-else>
                 <div class="ck-content" v-html="dataSource.articleURL || ''"></div>
@@ -142,6 +145,14 @@
         @submit="onBuySubmit"
         @close="onTipsModalClose"
       />
+
+      <RecommendTipsModal
+        :visible="confirmBoxVisible"
+        :userInfo="userInfo"
+        :dataSource="authorInfo"
+        @submit="onSubscribeClick"
+        @close="onConfirmBoxClose"
+      />
     </div>
   </BasicLayout>
 </template>
@@ -150,11 +161,13 @@
 import BasicLayout from "@/layouts/BasicLayout";
 import Header from "@/components/Header";
 import TipsModal from "./components/TipsModal";
+import RecommendTipsModal from "./components/RecommendTipsModal";
 import { mapState, mapActions } from "vuex";
 import {
   requestUserInfo,
   requestArticleDetail,
   requestBuyArticle,
+  requestBuyArticleMarketing,
 } from "@/api";
 
 export default {
@@ -163,6 +176,7 @@ export default {
     BasicLayout,
     "wm-header": Header,
     TipsModal,
+    RecommendTipsModal,
   },
   data() {
     return {
@@ -170,8 +184,10 @@ export default {
       userInfoLoading: false,
       pageLoading: false,
       dataSource: {},
-
       buyLoading: false,
+      authorInfo: {},
+      confirmBoxVisible: false,
+      subscribeLoading: false,
     };
   },
   computed: {
@@ -179,6 +195,21 @@ export default {
 
     isLogin() {
       return !!this.token;
+    },
+
+    articleMarketingMap() {
+      if (
+        this.dataSource.articleMarketingList &&
+        this.dataSource.articleMarketingList.length > 0
+      ) {
+        const obj = {};
+        this.dataSource.articleMarketingList.forEach((item) => {
+          obj[item.id] = item;
+        });
+        return obj;
+      } else {
+        return {};
+      }
     },
   },
   methods: {
@@ -194,6 +225,7 @@ export default {
       requestUserInfo(params)
         .then((res) => {
           if (res.code === 0) {
+            this.updateUserInfo(res.result);
             cb && cb(res.result);
           } else {
             this.$toast(res.message);
@@ -214,6 +246,19 @@ export default {
       requestArticleDetail(params)
         .then((res) => {
           if (res.code === 0) {
+            const articleDetail = res.result;
+            this.dataSource = articleDetail;
+
+            this.$nextTick(() => {
+              if (
+                articleDetail.isBuy &&
+                articleDetail.articleMarketingList &&
+                articleDetail.articleMarketingList.length > 0
+              ) {
+                this.addButtonEventListener(articleDetail.articleMarketingList);
+              }
+            });
+
             cb && cb(res.result);
           } else {
             this.$toast(res.message);
@@ -255,9 +300,11 @@ export default {
           this.$refs.layout.menuVisible = true;
           break;
         case "buy":
+          // 购买按钮
           this.tipsModalVisible = true;
           break;
         case "recharge":
+          // 充值按钮
           this.$router.push("/user-center/recharge");
           break;
       }
@@ -267,19 +314,14 @@ export default {
      * 确认购买
      */
     onBuySubmit() {
+      if (this.buyLoading) {
+        this.$toast("处理中...");
+        return;
+      }
       this.buyArticle({ token: this.token, articleId: this.id }, () => {
         this.onTipsModalClose();
-
-        this.getUserInfo({ token: this.token }, (res) => {
-          this.updateUserInfo(res);
-        });
-
-        this.getArticleDetail(
-          { token: this.token, articleId: this.id },
-          (res) => {
-            this.dataSource = res;
-          }
-        );
+        this.getUserInfo({ token: this.token });
+        this.getArticleDetail({ token: this.token, articleId: this.id });
       });
     },
 
@@ -294,12 +336,7 @@ export default {
      * 在当前页面登录
      */
     onLogin() {
-      this.getArticleDetail(
-        { token: this.token, articleId: this.id },
-        (res) => {
-          this.dataSource = res;
-        }
-      );
+      this.getArticleDetail({ token: this.token, articleId: this.id });
     },
 
     /**
@@ -310,14 +347,99 @@ export default {
         this.tipsModalVisible = false;
       }
     },
+
+    /**
+     * 确定购买按钮
+     * @param e
+     */
+    onConfirmBuy(e) {
+      const key = e.target.getAttribute("id");
+      this.authorInfo = this.articleMarketingMap[key];
+      this.confirmBoxVisible = true;
+    },
+
+    /**
+     * 添加所有文章按钮的事件监听
+     */
+    addButtonEventListener(articleMarketingList) {
+      const btnEls = window.document.querySelectorAll(
+        ".ck-content .recommend-button"
+      );
+      btnEls.forEach((btnEl, index) => {
+        if (articleMarketingList[index].buy) {
+          // 已购买
+          const parentEl = btnEl.parentNode;
+          const spanEl = document.createElement("span");
+          spanEl.classList.add("recommend-result");
+          spanEl.appendChild(
+            document.createTextNode(articleMarketingList[index].proposal)
+          );
+          parentEl.replaceChild(spanEl, btnEl);
+        } else {
+          // 未购买
+          btnEl.setAttribute("id", articleMarketingList[index].id);
+          btnEl.addEventListener("click", this.onConfirmBuy);
+        }
+      });
+    },
+
+    /**
+     * 移除所有文章按钮的事件监听
+     */
+    clearButtonEventListener() {
+      const btnEls = window.document.querySelectorAll(
+        ".ck-content .recommend-button"
+      );
+      btnEls.forEach((btnEl) => {
+        btnEl.removeEventListener("click", this.onConfirmBuy);
+      });
+    },
+
+    /**
+     * 订阅推介
+     */
+    onSubscribeClick(values) {
+      if (this.subscribeLoading) {
+        this.$toast("处理中...");
+        return;
+      }
+
+      const { id: articleMarketingId } = values;
+      this.subscribeLoading = true;
+      requestBuyArticleMarketing({ token: this.token, articleMarketingId })
+        .then((res) => {
+          if (res.code === 0) {
+            this.$toast(res.message);
+            this.onConfirmBoxClose();
+            this.getArticleDetail({ token: this.token, articleId: this.id });
+            this.getUserInfo({ token: this.token });
+          } else {
+            this.$toast(res.message);
+          }
+        })
+        .finally(() => {
+          this.subscribeLoading = false;
+        });
+    },
+
+    /**
+     * 关闭确认框
+     */
+    onConfirmBoxClose() {
+      this.confirmBoxVisible = false;
+      setTimeout(() => {
+        this.authorInfo = {};
+      }, 100);
+    },
   },
   mounted() {
     const { id } = this.$route.query;
     this.id = id;
 
-    this.getArticleDetail({ token: this.token, articleId: id }, (res) => {
-      this.dataSource = res;
-    });
+    this.getArticleDetail({ token: this.token, articleId: id });
+  },
+  beforeDestroy() {
+    this.clearButtonEventListener();
   },
 };
 </script>
