@@ -1,8 +1,8 @@
 const isProduction = process.env.NODE_ENV === "production";
 
 module.exports = {
-  publicPath: isProduction ? "/m-football/" : "/test-m-football/",
-  outputDir: isProduction ? "m-football" : "test-m-football",
+  publicPath: isProduction ? "./" : "/test-m-football/",
+  outputDir: isProduction ? "mobile-football" : "test-m-football",
   lintOnSave: !isProduction,
   devServer: {
     https: process.env.VUE_APP_PROTOCOL === "https",
