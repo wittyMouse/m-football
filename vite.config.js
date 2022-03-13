@@ -17,6 +17,7 @@ export default defineConfig(({ command, mode }) => {
   //   // build 配置
   // }
   return {
+    base: command === "build" ? "./" : "/test-m-football/",
     plugins: [
       createVuePlugin({
         jsx: true,
@@ -68,8 +69,7 @@ export default defineConfig(({ command, mode }) => {
       },
     },
     build: {
-      publicDir: command === "build" ? "./" : "/test-m-football/",
-      outDir: command === "build" ? "mobile-football" : "test-m-football",
+      outDir: command === "build" ? "m-football" : "test-m-football",
     },
   };
 });
