@@ -188,16 +188,19 @@ export default function registerRouterGuards(router) {
           } else {
             // 校验失败
             window.sessionStorage.removeItem("auth_token");
-            next("eshop-home");
+            // next("eshop-home");
+            window.location.href = window.location.origin + '/eshop-view'
           }
         } catch (e) {
           // 校验失败
           window.sessionStorage.removeItem("auth_token");
-          next("eshop-home");
+          // next("eshop-home");
+          window.location.href = window.location.origin + '/eshop-view'
         }
       } else {
         // 没有 authToken ,跳转电商
-        next("eshop-home");
+        // next("eshop-home");
+        window.location.href = window.location.origin + '/eshop-view'
       }
     } else {
       // 不需要 authToken 的页面
