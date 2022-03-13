@@ -1,7 +1,7 @@
 import Vue from "vue";
 import store from "../store";
 import VueRouter from "vue-router";
-import Home from "../views/Home";
+import Home from "../views/Home/index.vue";
 import { isWXEnv } from "@/utils";
 import { appId } from "@/api/config";
 import { requestRegisterByWechat, requestUserInfo } from "@/api";
@@ -22,77 +22,77 @@ const routes = [
   {
     path: "/recommend",
     name: "Recommend",
-    component: () => import("../views/Recommend"),
+    component: () => import("../views/Recommend/index.vue"),
   },
   {
     path: "/recommend/detail",
     name: "RecommendDetail",
-    component: () => import("../views/Recommend/detail"),
+    component: () => import("../views/Recommend/detail/index.vue"),
   },
   {
     path: "/latest-clue",
     name: "LatestClue",
-    component: () => import("../views/LatestClue"),
+    component: () => import("../views/LatestClue/index.vue"),
   },
   {
     path: "/latest-clue/detail",
     name: "LatestClueDetail",
-    component: () => import("../views/LatestClue/detail"),
+    component: () => import("../views/LatestClue/detail/index.vue"),
   },
   {
     path: "/latest-clue/profile",
     name: "LatestClueProfile",
-    component: () => import("../views/LatestClue/profile"),
+    component: () => import("../views/LatestClue/profile/index.vue"),
   },
   {
     path: "/best-news",
     name: "BestNews",
-    component: () => import("../views/BestNews"),
+    component: () => import("../views/BestNews/index.vue"),
   },
   {
     path: "/playback",
     name: "Playback",
-    component: () => import("../views/Playback"),
+    component: () => import("../views/Playback/index.vue"),
   },
   {
     path: "/user-center/index",
     name: "UserCenter",
-    component: () => import("../views/UserCenter"),
+    component: () => import("../views/UserCenter/index.vue"),
   },
   {
     path: "/user-center/modify",
     name: "UserCenterModify",
-    component: () => import("../views/UserCenter/modify"),
+    component: () => import("../views/UserCenter/modify/index.vue"),
   },
   {
     path: "/user-center/recharge",
     name: "UserCenterRecharge",
-    component: () => import("../views/UserCenter/recharge"),
+    component: () => import("../views/UserCenter/recharge/index.vue"),
   },
   {
     path: "/user-center/record",
     name: "UserCenterRecord",
-    component: () => import("../views/UserCenter/record"),
+    component: () => import("../views/UserCenter/record/index.vue"),
   },
   {
     path: "/user-center/register",
     name: "UserCenterRegister",
-    component: () => import("../views/UserCenter/register"),
+    component: () => import("../views/UserCenter/register/index.vue"),
   },
   {
     path: "/tips",
     name: "Tips",
-    component: () => import("../views/Tips"),
+    component: () => import("../views/Tips/index.vue"),
   },
   {
     path: "/shop-car",
     name: "ShopCar",
-    component: () => import("../views/ShopCar"),
+    component: () => import("../views/ShopCar/index.vue"),
   },
   {
     path: "/error",
     name: "Error",
-    component: () => import("../views/Error"),
+    component: () => import("../views/Error/index.vue"),
   },
   {
     path: "*",
@@ -119,7 +119,7 @@ router.beforeEach((to, from, next) => {
     }
   }
 
-  // if (process.env.NODE_ENV !== "production") {
+  // if (import.meta.env.MODE !== "production") {
   //   next();
   // } else {
   if (!isWXEnv() && to.path !== "/error") {
