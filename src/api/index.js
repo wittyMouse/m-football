@@ -481,3 +481,31 @@ export function requestBuyArticleMarketing(data) {
     data,
   });
 }
+
+/**
+ * 获取 token
+ * @param { redirectUrl: string }
+ */
+export function requestAuxiliaryRedirect(params) {
+  const urlSearchParams = new URLSearchParams();
+  Object.keys(params).forEach((key) => {
+    urlSearchParams.append(key, params[key]);
+  });
+  return request({
+    url: "/auxiliary/redirect",
+    method: "get",
+    params,
+  });
+}
+
+/**
+ * 校验token接口
+ * @param { token: string }
+ */
+export function requestAuxiliaryCheckToken(params) {
+  return request({
+    url: "/auxiliary/checkToken",
+    method: "get",
+    params,
+  });
+}

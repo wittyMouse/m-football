@@ -1,16 +1,21 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { SET_TOKEN, SET_USER_INFO, SET_MODAL_VISIBLE, SET_MODAL_CONFIG } from "./mutation-types";
+import {
+  SET_TOKEN,
+  SET_USER_INFO,
+  SET_MODAL_VISIBLE,
+  SET_MODAL_CONFIG,
+} from "./mutation-types";
 import { requestLogout } from "@/api";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
     token: "",
     userInfo: {},
     modalVisible: false,
-    modalConfig: {}
+    modalConfig: {},
   },
   mutations: {
     [SET_TOKEN](state, data) {
@@ -55,7 +60,13 @@ export default new Vuex.Store({
     },
     updateModalConfig({ commit }, data) {
       commit(SET_MODAL_CONFIG, data);
-    }
+    },
   },
   modules: {},
 });
+
+export function useStore() {
+  return store
+}
+
+export default store;
